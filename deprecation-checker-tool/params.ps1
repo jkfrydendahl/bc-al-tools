@@ -32,7 +32,7 @@
 
 Clear-Host
 
-cd "C:\Dev\MyStuff\bc-al-tools\deprecation-tool"
+cd "C:\Dev\MyStuff\bc-al-tools\deprecation-checker-tool"
 . .\Invoke-AzDoGetOldApps.ps1
 
 foreach ($TokenImport in import-csv imports/token.csv) {
@@ -50,9 +50,9 @@ foreach ($ProjectEntry in import-csv imports/inputparams.csv) {
         Token                  = $Token
         OrganizationName       = $Organisation
         ProjectName            = $Project
-        NamingPrefix           = '*'
-        AppPublisher           = '*'
-        AppPrefix              = '*'
+        NamingPrefix           = 'NAL'
+        AppPublisher           = '9altitudes'
+        AppPrefix              = '9A*'
         SourceCodeFolder       = 'src'
     }
 
