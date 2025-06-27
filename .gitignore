@@ -20,3 +20,5 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+#User-specific files for deprecation tool
+deprecation-checker-tool/imports/
