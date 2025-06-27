@@ -50,9 +50,9 @@ foreach ($ProjectEntry in import-csv imports/inputparams.csv) {
         Token                  = $Token
         OrganizationName       = $Organisation
         ProjectName            = $Project
-        NamingPrefix           = 'NAL'
-        AppPublisher           = '9altitudes'
-        AppPrefix              = '9A*'
+        NamingPrefix           = '*'
+        AppPublisher           = '*'
+        AppPrefix              = '*'
         SourceCodeFolder       = 'src'
     }
 
