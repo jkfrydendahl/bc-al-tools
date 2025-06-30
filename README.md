@@ -1,7 +1,7 @@
 # bc-al-tools
 Tools and scripts related to Business Central and AL development.
 
-## Roadmap
+## Roadmaps
 ### Deprecation Checker Tool:
 - [x] App name prefix
 - [x] App publisher
@@ -14,3 +14,9 @@ Tools and scripts related to Business Central and AL development.
 - [x] In settings.json, codeAnalyzers must at least contain CodeCop and UICop analysers
 - [x] Option to overwrite default script parameters values with custom ones from repo file
 - [ ] Compiler functionality to check for warnings and errors
+
+### Azure DevOps Project List Extractor:
+- [ ] TBD
+
+### AL App Extractor:
+- [ ] TBD
