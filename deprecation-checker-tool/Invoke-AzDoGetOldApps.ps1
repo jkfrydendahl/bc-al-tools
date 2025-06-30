@@ -288,8 +288,10 @@
                 
                 if ($EffortCount -gt 0) {
                     $HoursToFix = [Math]::Ceiling($EffortCount/60)
+                    $HoursToFixFiles = [Math]::Ceiling(($deprecatedFilePrefixCount*10)/60)
                     Write-Message " "
-                    Write-Message "   - Estimated hours needed to fix all deprecation issues: $($HoursToFix)" -ForegroundColor Gray
+                    Write-Message "   - Estimated hours needed to fix all deprecation issues: $($HoursToFix) hour(s)" -ForegroundColor Gray
+                    Write-Message "     (of these, $($HoursToFixFiles) hour(s) consist of AL file prefix renames)" -ForegroundColor Gray
                 }
                 if ($ErrorCount -eq 0) {
                     Write-Message "   - No errors detected" -ForegroundColor Gray
