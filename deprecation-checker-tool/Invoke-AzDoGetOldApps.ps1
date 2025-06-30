@@ -287,7 +287,7 @@
                         }
                 
                 if ($EffortCount -gt 0) {
-                    $HoursToFix = ($EffortCount/60).ToString("F2")
+                    $HoursToFix = [Math]::Ceiling($EffortCount/60)
                     Write-Message " "
                     Write-Message "   - Estimated hours needed to fix all deprecation issues: $($HoursToFix)" -ForegroundColor Gray
                 }
