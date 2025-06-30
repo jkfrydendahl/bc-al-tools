@@ -1,7 +1,7 @@
 # bc-al-tools
 Tools and scripts related to Business Central and AL development.
 
-## Roadmaps
+## Roadmap
 ### Deprecation Checker Tool:
 - [x] App name prefix
 - [x] App publisher
