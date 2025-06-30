@@ -47,7 +47,7 @@ cd "C:\Dev\MyStuff\bc-al-tools\deprecation-checker-tool"
 . .\Invoke-AzDoGetOldApps.ps1
 
 #Set this variable to true if you want to generate a report instead of outputting to console
-$CreateReportSetting = $true
+$CreateReportSetting = $false
 
 if ($CreateReportSetting) {
     Write-Host "CreateReport = TRUE. Results will be sent to log file."
