@@ -47,16 +47,15 @@ cd "C:\Dev\MyStuff\bc-al-tools\deprecation-checker-tool"
 . .\Invoke-AzDoGetOldApps.ps1
 
 #Set this variable to true if you want to generate a report instead of outputting to console
-$CreateReportSetting = $false
+$CreateReportSetting = $true
 
 if ($CreateReportSetting) {
-    Write-Host "CreateReport = TRUE. Results will be sent to log file."
-
     $timestamp = Get-Date -Format "yyyyMMdd"
-    $logFile = ".\logs\log_$timestamp.txt"
+    $logFile = ".\logs\deprecation_log_$timestamp.txt"
     if (Test-Path $logFile) {
         Remove-Item $logFile
     }
+    Write-Host "CreateReport = TRUE. Results will be sent to log file. '.\logs\deprecation_log_$timestamp.txt'"
 }
 
 foreach ($TokenImport in import-csv imports/token.csv) {
