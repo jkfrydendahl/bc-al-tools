@@ -11,6 +11,7 @@
     - Ruleset must have prefix equal to the NamingPrefix parameter.
     - In settings.json, objectNamePrefix must be equal to the NamingPrefix parameter.
     - In settings.json, enableCodeAnalysis must be set to TRUE.
+    - In settings.json codeAnalyzers must contain (at least) the analysers set by the CodeAnalysers parameter
     - Also includes a count of all .al objects in the SourceCodeFolder (parameter) that does not have prefix equal to the NamingPrefix parameter  
 
     .REQUIRED FILES
@@ -27,7 +28,17 @@
     - Contains the Azure DevOps Project(s) (Used for PARAMETER ProjectName)
 
     .NOTES
-    Remember to change the cd path to wherever the repo is cloned on your machine!
+    - Remember to change the cd path to wherever the repo is cloned on your machine!
+    - AzDoGetOldApps contains option to scan repo for custom parameter file that overrides standard params set below.
+      To use this functionality, place a .json named CustomDeprecationParameters in the repo root folder.
+      Example JSON: 
+        {
+            "NamingPrefix": "ABC",
+            "AppPublisher": "MyPublisher",
+            "AppPrefix": "MP",
+            "SourceCodeFolder": "src",
+            "CodeAnalysers": ["CodeCop","PerTenantExtensionCop","UICop"]
+        }
 #>
 
 Clear-Host
@@ -52,8 +63,9 @@ foreach ($ProjectEntry in import-csv imports/inputparams.csv) {
         ProjectName            = $Project
         NamingPrefix           = 'NAL'
         AppPublisher           = '9altitudes'
-        AppPrefix              = '9A*'
+        AppPrefix              = '9A'
         SourceCodeFolder       = 'src'
+        CodeAnalysers          = @("CodeCop","UICop")
     }
 
     Invoke-AzDoGetOldApps @Parameters

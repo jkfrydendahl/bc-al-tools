@@ -8,6 +8,9 @@ Tools and scripts related to Business Central and AL development.
 - [x] Permission set prefix
 - [x] Permission set type
 - [x] Count of objects of type *.al with the wrong prefix
-- [ ] Ruleset prefix
-- [ ] In settings.json, objectNamePrefix must be correct
-- [ ] In settings.json, enableCodeAnalysis must be = true
+- [x] Ruleset prefix
+- [x] In settings.json, objectNamePrefix must be correct
+- [x] In settings.json, enableCodeAnalysis must be = true
+- [x] In settings.json, codeAnalyzers must at least contain CodeCop and UICop analysers
+- [x] Option to overwrite default script parameters values with custom ones from repo file
+- [ ] Compiler functionality to check for warnings and errors
