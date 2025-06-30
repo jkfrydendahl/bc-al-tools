@@ -151,7 +151,7 @@
 
             }
             if ($Errormessage -like "*Cannot find any branches*" ) {
-                Write-Message "INFO: Repo $($Repo.Name) is empty" -ForegroundColor Gray
+                
             }
             else {
                 $ErrorCount = 0
