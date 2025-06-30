@@ -20,8 +20,32 @@
         [Parameter(Mandatory = $true)]
         [String]$SourceCodeFolder,
         [Parameter(Mandatory = $true)]
-        [Array]$CodeAnalysers
+        [Array]$CodeAnalysers,
+        [Parameter(Mandatory = $true)]
+        [Boolean]$CreateReport
+
     )
+
+    # Custom write function for outputting to either console or report
+    function Write-Message {
+        param(
+            [string]$Message,
+            [string]$ForegroundColor = $null,
+            [string]$BackgroundColor = $null
+        )
+        
+        if ($CreateReport) {
+            Write-Output $Message
+        } else {
+            if ($ForegroundColor -and $BackgroundColor) {
+                Write-Host $Message -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+            } elseif ($ForegroundColor) {
+                Write-Host $Message -ForegroundColor $ForegroundColor
+            } else {
+                Write-Host $Message
+            }
+        }
+    }
 
     $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $UserName, $Token)))
     $Header = @{
@@ -30,10 +54,10 @@
 
     $BaseURL = "https://dev.azure.com/$OrganizationName"
 
-    Write-Host " "
-    Write-Host "-----------------------------------------------------------------"
-    Write-Host "INFO: NOW RUNNING CHECK ON $ProjectName" -ForegroundColor White -BackgroundColor Black
-    Write-Host "-----------------------------------------------------------------"
+    Write-Message " "
+    Write-Message "-----------------------------------------------------------------"
+    Write-Message "INFO: NOW RUNNING CHECK ON $ProjectName" -ForegroundColor White -BackgroundColor Black
+    Write-Message "-----------------------------------------------------------------"
 
     $RepositoryURL = "$BaseURL/$ProjectName/_apis/git/repositories?api-version=6.0"
 
@@ -51,7 +75,7 @@
     }
     # if a specific repo is specified, only that repo will be collected.
     if ($RepoName) {
-        Write-Host "Found RepoName: $RepoName" -ForegroundColor -Gray
+        Write-Message "Found RepoName: $RepoName" -ForegroundColor -Gray
         $AllRepos = $AllRepos | Where-Object { $_.name -eq $RepoName }
     }
     #Write-Host "Found $($AllRepos.Count) repos" -ForegroundColor Gray
@@ -124,64 +148,85 @@
 
             }
             if ($Errormessage -like "*Cannot find any branches*" ) {
-                Write-Host "INFO: Repo is empty" -ForegroundColor Gray
+                Write-Message "INFO: Repo is empty" -ForegroundColor Gray
             }
             else {
-                $errorCount = 0
-                Write-Host " "
-                Write-Host "Checking for deprecation errors in $($repo.name):" -ForegroundColor White
+                $ErrorCount = 0
+                $EffortCount = 0
+                Write-Message " "
+                Write-Message "Checking for deprecation errors in $($repo.name):" -ForegroundColor White
                 if ($CustomParameters -ne $null) {
-                        Write-Host "Custom parameter file detected" -ForegroundColor Cyan
-                        Write-Host " "
+                        Write-Message "Custom parameter file detected" -ForegroundColor Cyan
+                        Write-Message " "
                     }
 
                     if ($AppFileName.name -notlike "$($CurrentAppPrefix)*") {
-                        $errorCount += 1
-                        Write-host "   - Missing or deprecated app name prefix (correct prefix = $($CurrentAppPrefix))" -ForegroundColor Gray
+                        $ErrorCount += 1
+                        Write-Message "   - Missing or deprecated app name prefix (correct prefix = $($CurrentAppPrefix))" -ForegroundColor Gray
+                        # Estimated time to fix: 5 minutes
+                        $EffortCount += 5
                     }
                     if ($App.publisher -ne "$($CurrentAppPublisher)") {
-                        $errorCount += 1
-                        Write-host "   - Deprecated app publisher $($FindApp.publisher) (expected publisher $($CurrentAppPublisher))" -ForegroundColor Gray
+                        $ErrorCount += 1
+                        Write-Message "   - Deprecated app publisher $($FindApp.publisher) (expected publisher $($CurrentAppPublisher))" -ForegroundColor Gray
+                        # Estimated time to fix: 5 minutes
+                        $EffortCount += 5
                     }
 
                     if ($PermissionSet -eq '') {
-                        $errorCount += 1
-                        Write-Host "   - Missing permission set" -ForegroundColor Gray
+                        $ErrorCount += 1
+                        Write-Message "   - Missing permission set" -ForegroundColor Gray
+                        # Estimated time to fix: 30 minutes
+                        $EffortCount += 30
                     }
                         elseif ($PermissionSet.path -like '*.xml') {
-                            $errorCount += 1
-                            Write-host "   - Deprecated XML permission set (file type must me .al)" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Deprecated XML permission set (file type must me .al)" -ForegroundColor Gray
+                            # Estimated time to fix: 40 minutes
+                            $EffortCount += 40
                         } elseif ($PermissionSet.path -notlike "$($RulePrefix)*") {
-                            $errorCount += 1
-                            Write-host "   - Permissionset does not have correct prefix ($($RulePrefix))" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Permissionset does not have correct prefix ($($RulePrefix))" -ForegroundColor Gray
+                            # Estimated time to fix: 40 minutes
+                            $EffortCount += 40
                         }
 
                     if ($RuleSet.path -notlike "/$($CurrentNamingPrefix)*") {
-                        $errorCount += 1
-                        Write-host "   - RuleSet file is missing or does not have correct name ($($CurrentNamingPrefix).RuleSet.json)" -ForegroundColor Gray
+                        $ErrorCount += 1
+                        Write-Message "   - RuleSet file is missing or does not have correct name ($($CurrentNamingPrefix).RuleSet.json)" -ForegroundColor Gray
+                        # Estimated time to fix: 10 minutes
+                        $EffortCount += 30
                     }
 
                     if ($Settings -is [string]) {
                         if ($Settings -notmatch '"CRS\.ObjectNamePrefix":\s*"' + [regex]::Escape($CurrentNamingPrefix) + '"') {
-                            $errorCount += 1
-                            Write-host "   - Settings.json CRS.ObjectNamePrefix parameter is missing or deprecated" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Settings.json CRS.ObjectNamePrefix parameter is missing or deprecated" -ForegroundColor Gray
+                            # Estimated time to fix: 5 minutes
+                            $EffortCount += 5
                         }
                         if ($Settings -notmatch '"al.enableCodeAnalysis":\s*true') {
-                            $errorCount += 1
-                            Write-host "   - Settings.json al.enableCodeAnalysis parameter is missing or set to false" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Settings.json al.enableCodeAnalysis parameter is missing or set to false" -ForegroundColor Gray
+                            # Estimated time to fix: 5 minutes
+                            $EffortCount += 5
                         }
                         if ($CustomParameters -like "*CodeAnalysers*") {
                             foreach ($CodeAnalyser in $CustomParameters.CodeAnalysers) {
                                     if ($Settings -notmatch "`"al\.codeAnalyzers`":\s*\[.*`"\$\{$($CodeAnalyser)\}`".*\]") {
-                                        $errorCount += 1
-                                        Write-host "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyzer" -ForegroundColor Gray
+                                        $ErrorCount += 1
+                                        Write-Message "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyzer" -ForegroundColor Gray
+                                        # Estimated time to fix: 5 minutes
+                                        $EffortCount += 5
                                     }
                             }
                         } else {
                             foreach($CodeAnalyser in $CodeAnalysers) {
                                  if ($Settings -notmatch "{$($CodeAnalyser)}") {
-                                    $errorCount += 1
-                                    Write-host "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyzer" -ForegroundColor Gray
+                                    $ErrorCount += 1
+                                    Write-Message "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyzer" -ForegroundColor Gray
+                                    # Estimated time to fix: 5 minutes
+                                    $EffortCount += 5
                                 }
                             }
                           }
@@ -189,20 +234,26 @@
                     else
                     {
                         if ($Settings.'CRS.ObjectNamePrefix' -ne $CurrentNamingPrefix) {
-                            $errorCount += 1
-                            Write-host "   - Settings.json CRS.ObjectNamePrefix parameter is missing or deprecated" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Settings.json CRS.ObjectNamePrefix parameter is missing or deprecated" -ForegroundColor Gray
+                            # Estimated time to fix: 5 minutes
+                            $EffortCount += 5
                         }
                         if ($Settings.'al.enableCodeAnalysis' -ne $true) {
-                            $errorCount += 1
-                            Write-host "   - Settings.json al.enableCodeAnalysis parameter is missing or set to false" -ForegroundColor Gray
+                            $ErrorCount += 1
+                            Write-Message "   - Settings.json al.enableCodeAnalysis parameter is missing or set to false" -ForegroundColor Gray
+                            # Estimated time to fix: 5 minutes
+                            $EffortCount += 5
                         }
                         if ($CustomParameters -like "*CodeAnalysers*") {
                             foreach ($CodeAnalyser in $CustomParameters.CodeAnalysers) {
                             $pattern = "`${$($CodeAnalyser)}"
                             $analyzersString = $Settings.'al.codeAnalyzers' -join ' '
                                 if ($analyzersString -notlike "*$pattern*") {
-                                    $errorCount += 1
-                                    Write-host "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyser" -ForegroundColor Gray
+                                    $ErrorCount += 1
+                                    Write-Message "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyser" -ForegroundColor Gray
+                                    # Estimated time to fix: 5 minutes
+                                    $EffortCount += 5
                                 }
                             }
                         } else {
@@ -210,8 +261,10 @@
                                 $pattern = "`${$($CodeAnalyser)}"
                                 $analyzersString = $Settings.'al.codeAnalyzers' -join ' '
                                 if ($analyzersString -notlike "*$pattern*") {
-                                    $errorCount += 1
-                                    Write-host "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyser" -ForegroundColor Gray
+                                    $ErrorCount += 1
+                                    Write-Message "   - Settings.json al.codeAnalyzers parameter is missing $($CodeAnalyser) analyser" -ForegroundColor Gray
+                                    # Estimated time to fix: 5 minutes
+                                    $EffortCount += 5
                                 }
                             }
                         }
@@ -225,18 +278,23 @@
                         $FileName = ([System.IO.Path]::GetFileName($File.path))
                         if (-not $FileName.StartsWith("$($CurrentNamingPrefix)")) {
                             $deprecatedFilePrefixCount += 1
+                            # Estimated time to fix (per file): 10 minutes
+                            $EffortCount += 10
                         }
                     }
                         if ($deprecatedFilePrefixCount -gt 0) {
-                            Write-host "   - $($deprecatedFilePrefixCount) AL file(s) found with missing $($CurrentNamingPrefix) prefix" -ForegroundColor Gray
+                            Write-Message "   - $($deprecatedFilePrefixCount) AL file(s) found with missing $($CurrentNamingPrefix) prefix" -ForegroundColor Gray
                         }
                 
-                if ($errorCount -eq 0) {
-                    write-host "   - No errors detected" -ForegroundColor Gray
-                }    
+                if ($EffortCount -gt 0) {
+                    $HoursToFix = ($EffortCount/60).ToString("F2")
+                    Write-Message " "
+                    Write-Message "   - Estimated hours needed to fix all deprecation issues: $($HoursToFix)" -ForegroundColor Gray
+                }
+                if ($ErrorCount -eq 0) {
+                    Write-Message "   - No errors detected" -ForegroundColor Gray
+                }  
             }
         }
    }
-            
-    #Write-Host "INFO: done with project" -ForegroundColor White -BackgroundColor Blue
 }

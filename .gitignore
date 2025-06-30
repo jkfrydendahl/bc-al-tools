@@ -22,3 +22,4 @@ rad.json
 TestResults.xml
 #User-specific files for deprecation tool
 deprecation-checker-tool/imports/
+deprecation-checker-tool/logs/*
