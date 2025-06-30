@@ -92,6 +92,9 @@
         if ($repo.name -match 'FixData') {
             $DoRun = $false
         }
+        if ($repo.name -match 'Temp') {
+            $DoRun = $false
+        }
 
         if ($DoRun -eq $true) {
             $LoopCount++
