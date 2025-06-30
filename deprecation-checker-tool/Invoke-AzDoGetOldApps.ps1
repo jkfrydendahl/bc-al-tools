@@ -148,13 +148,14 @@
 
             }
             if ($Errormessage -like "*Cannot find any branches*" ) {
-                Write-Message "INFO: Repo is empty" -ForegroundColor Gray
+                Write-Message "INFO: Repo $($Repo.Name) is empty" -ForegroundColor Gray
             }
             else {
                 $ErrorCount = 0
                 $EffortCount = 0
                 Write-Message " "
                 Write-Message "Checking for deprecation errors in $($repo.name):" -ForegroundColor White
+                Write-Message " "
                 if ($CustomParameters -ne $null) {
                         Write-Message "Custom parameter file detected" -ForegroundColor Cyan
                         Write-Message " "
