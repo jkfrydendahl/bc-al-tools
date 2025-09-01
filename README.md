@@ -20,3 +20,6 @@ Tools and scripts related to Business Central and AL development.
 
 ### AL App Extractor:
 - [ ] TBD
+
+### GitHub Copilot Prompts:
+- [x] Prompt for updating a project README to follow a standardized structure with introduction, feature areas, and comprehensive documentation sections while adhering to specific formatting and inclusion guidelines.
