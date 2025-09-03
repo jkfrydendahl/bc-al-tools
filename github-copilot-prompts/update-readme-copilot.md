@@ -24,6 +24,6 @@ For software dependencies, ONLY list:
 - App dependencies listed in the app.json
 
 Minimum required links for Reference Documentation (add more if you think it's relevant):
-- [Microsoft AL Documentation](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-reference-overview)
+- [Microsoft AL Documentation](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-dev-overview)
 - [9A DevOps Wiki: Source Control and Dev Standards](https://dev.azure.com/Dynalogic/9A%20Intern/_wiki/wikis/9A-Intern.wiki/14/Source-Control-and-Development-Standards)
 - [Business Central Extension Development](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/developer/devenv-reference-overview)
