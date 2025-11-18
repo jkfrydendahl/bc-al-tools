@@ -13,7 +13,7 @@ When asked to run the analysis_prompt.md, firstly do so without analyzing the in
 - Continue this process until the entire file has been successfully processed.
 - Note: The file is long - it contains 3.211.082 lines. It is VERY important to ensure that we actually scan through the entire file.
 
-**The patterns we need to look for are as follows (all examples are taken directly from the file, so at least those I know are present):**
+**The patterns we need to look for are as follows:**
 
 Note that I've marked with **bold** which parts in each pattern that denotes a customization.
 
