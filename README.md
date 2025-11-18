@@ -15,6 +15,10 @@ Tools and scripts related to Business Central and AL development.
 - [x] Option to overwrite default script parameters values with custom ones from repo file
 - [ ] Compiler functionality to check for warnings and errors
 
+### C/AL Code Customization Checker Tool:
+- [x] Template prompt and input files for analyzing C/AL code customizations
+- [x] Example PowerShell script.
+
 ### Azure DevOps Project List Extractor:
 - [ ] TBD
 
