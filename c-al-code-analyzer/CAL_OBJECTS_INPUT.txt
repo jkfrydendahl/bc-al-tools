@@ -1,0 +1,10 @@
+Replace this file with the extract of all the C/AL objects you want to analyze.
+
+<!> REQUIREMENTS IF YOU ARE CREATING A NEW SCRIPT WITH THE analysis-prompt.md <!>
+Be sure to include the following info at the top of this file:
+
+INPUT NAVISION VERSION (e.g. NAV2017)
+TARGET BUSINESS CENTRAL VERSION (e.g. SaaS BC27)
+
+Also, make sure to edit the analysis-prompt.md to target the object ranges, keywords,
+patterns and so on that you want the script to use.
